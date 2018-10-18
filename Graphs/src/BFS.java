@@ -1,72 +1,56 @@
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
-public class BFS {
+class BFS{
+    private int v;
+    private List<Integer> graph[];
 
-    private int V;
-    private List<Integer>[] graph;
-    public int result[];
-
-    public BFS(int v) {
-        V = v;
-        graph = new LinkedList[V];
-        for (int i = 0; i < graph.length; i++) {
+    public BFS(int v){
+        this.v = v;
+        this.graph = new List[v];
+        for(int i=0; i<v; i++){
             graph[i] = new LinkedList<>();
         }
     }
 
-    public void addEdge(int u, int v) {
-        graph[u].add(0, v);
+    public void addEdge(int u, int v){
+        graph[u].add(v);
     }
 
-    public void BFSsearch(int s) {
-        boolean visited[] = new boolean[V];
-        int count = 0;
-        result = new int[V];
-        LinkedList<Integer> queue = new LinkedList<Integer>();
-        visited[s] = true;
+    public void BFS(int s){
+        Boolean visited[] = new Boolean[v];
+        for(int i=0; i<visited.length; i++){
+            visited[i] = false;
+        }
+
+        LinkedList<Integer> queue = new LinkedList<>();
         queue.add(s);
 
-        while (queue.size() != 0) {
-            count++;
-            s = queue.poll();
+        while(queue.size() != 0){
+            int n = queue.poll();
+            visited[n] = true;
+            System.out.println(n + " ");
+            ListIterator<Integer> iterator = graph[n].listIterator();
 
-            Iterator<Integer> i = graph[s].listIterator();
-            while (i.hasNext()) {
-                int n = i.next();
-                if (!visited[n]) {
-                    visited[n] = true;
-                    result[n] = 6 * count;
-                    queue.add(n);
+            while(iterator.hasNext()){
+                int next = iterator.next();
+                if(!visited[next]){
+                    visited[next] = true;
+                    queue.add(next);
                 }
             }
         }
     }
 
-    public static void main(String[] args) {
-        Scanner in = new Scanner(System.in);
-        int t = in.nextInt();
-        for (int q = 0; q < t; q++) {
-            int n = in.nextInt();
+    public static void main(String[] args){
+        BFS obj = new BFS(4);
 
-            int m = in.nextInt();
-            BFS obj = new BFS(n);
-            for (int i = 0; i < m; i++) {
-                obj.addEdge(in.nextInt() - 1, in.nextInt() - 1);
-            }
-            int s = in.nextInt();
-            obj.BFSsearch(s - 1);
+        obj.addEdge(0, 1);
+        obj.addEdge(0, 2);
+        obj.addEdge(1, 2);
+        obj.addEdge(2, 0);
+        obj.addEdge(2, 3);
+        obj.addEdge(3, 3);
 
-            for (int i = 0; i < obj.result.length; i++) {
-                if (i == s - 1)
-                    continue;
-                if (obj.result[i] == 0)
-                    System.out.print(-1 + " ");
-                else
-                    System.out.print(obj.result[i] + " ");
-            }
-        }
+        obj.BFS(2);
     }
 }
